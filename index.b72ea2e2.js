@@ -1,0 +1,2 @@
+var scrollToTopButton=document.querySelector(".scroll-to-top");scrollToTopButton.classList.add("is-hidden"),scrollToTopButton.addEventListener("click",(function(){window.scrollTo({top:0,behavior:"smooth"})})),window.addEventListener("scroll",(function(){window.pageYOffset>100&&document.documentElement.scrollHeight>100?scrollToTopButton.classList.remove("is-hidden"):scrollToTopButton.classList.add("is-hidden")}));
+//# sourceMappingURL=index.b72ea2e2.js.map

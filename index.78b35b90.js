@@ -1,0 +1,2 @@
+!function(){var e=document.getElementById("search-form"),t=document.getElementById("search-input");e.addEventListener("submit",(function(e){e.preventDefault(),""!==t.value.trim()?(t.value="",t.setAttribute("placeholder","Search images...")):alert("Please enter a search term.")})),t.addEventListener("click",(function(){t.removeAttribute("placeholder")})),t.addEventListener("blur",(function(){""===t.value&&t.setAttribute("placeholder","Search images...")}))}();
+//# sourceMappingURL=index.78b35b90.js.map
