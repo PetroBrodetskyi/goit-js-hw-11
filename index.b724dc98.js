@@ -1,2 +1,0 @@
-const e=document.getElementById("search-form"),t=document.getElementById("search-input");e.addEventListener("submit",(e=>{e.preventDefault();""!==t.value.trim()?(t.value="",t.setAttribute("placeholder","Search images...")):alert("Please enter a search term.")})),t.addEventListener("click",(()=>{t.removeAttribute("placeholder")})),t.addEventListener("blur",(()=>{""===t.value&&t.setAttribute("placeholder","Search images...")}));
-//# sourceMappingURL=index.b724dc98.js.map
