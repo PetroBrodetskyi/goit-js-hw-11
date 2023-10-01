@@ -1,6 +1,7 @@
 import axios from 'axios';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const apiKey = '39760992-bd564f72a97718cc10783b18b';
 const perPage = 40;
@@ -52,7 +53,12 @@ async function fetchImages() {
     const data = response.data;
 
     if (data.hits.length === 0) {
-      alert('No images found. Please try again.');
+      Notify.failure("Sorry, there are no images matching your search query. Please try again.", {
+        position: 'center-bottom',
+        timeout: 3000,
+        width: '320px',
+        fontSize: '18px'
+      });
     } else {
       renderGallery(data.hits);
       page++;
@@ -66,8 +72,8 @@ function checkScroll() {
   const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
   
   if (scrollTop + clientHeight >= scrollHeight - 200) {
-    fetchImages();
-  }
+      fetchImages();
+    }
 }
 
 searchForm.addEventListener('submit', (event) => {
