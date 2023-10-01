@@ -115,11 +115,6 @@ h1 {
   padding-top: 120px;
 }
 
-.box-img {
-  display: flex;
-  align-items: center;
-}
-
 .photo-card {
   display: flex;
   flex-direction: column;
