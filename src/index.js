@@ -50,6 +50,10 @@ async function fetchImages() {
       },
     });
 
+    if (searchTerm === '') {
+      return;
+    };
+
     const data = response.data;
 
     if (data.hits.length === 0) {
@@ -59,10 +63,12 @@ async function fetchImages() {
         width: '320px',
         fontSize: '18px'
       });
+    
     } else {
       renderGallery(data.hits);
       page++;
-    }
+      
+    };
   } catch (error) {
     console.error('Error:', error);
   }
@@ -73,7 +79,8 @@ function checkScroll() {
   
   if (scrollTop + clientHeight >= scrollHeight - 200) {
       fetchImages();
-    }
+  }
+  
 }
 
 searchForm.addEventListener('submit', (event) => {
@@ -89,4 +96,4 @@ window.addEventListener('scroll', checkScroll);
 titleElement.style.cursor = "pointer";
 titleElement.addEventListener("click", () => {
   location.reload();
-});
+})

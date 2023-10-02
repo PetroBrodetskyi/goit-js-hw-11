@@ -7,15 +7,13 @@ const searchInput = document.getElementById('search-input');
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const searchTerm = searchInput.value.trim();
-  if (searchTerm === '') {
-    Notify.info('Please enter a search term', {
-        position: 'center-bottom',
-        timeout: 3000,
-        width: '320px',
-        fontSize: '18px'
-    });
-    return;
-  }
+  if (searchTerm === '') 
+      Notify.failure('Please enter a search term', {
+      position: 'center-bottom',
+      timeout: 3000,
+      width: '320px',
+      fontSize: '18px'
+      })
   
   searchInput.value = '';
   searchInput.setAttribute('placeholder', 'Search images...');
@@ -30,3 +28,6 @@ searchInput.addEventListener('blur', () => {
     searchInput.setAttribute('placeholder', 'Search images...');
   }
 });
+
+
+
