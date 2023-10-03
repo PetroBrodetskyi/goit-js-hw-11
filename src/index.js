@@ -12,21 +12,25 @@ const searchInput = document.getElementById('search-input');
 const gallery = document.getElementById('gallery');
 const titleElement = document.querySelector(".title");
 
+let isFirstSearch = true;
+let isLoading = false;
+let hasMoreImages = true;
+let endOfResultsNotified = false;
 
 function renderGallery(images) {
-    const galleryHtml = images.map(({ webformatURL, largeImageURL, likes, views, comments, downloads, tags }) => `
+  const galleryHtml = images.map(({ webformatURL, largeImageURL, likes, views, comments, downloads, tags }) => `
     <div class="container">
-     <div class="photo-card">
-      <a href="${largeImageURL}" class="image-link">
-        <img src="${webformatURL}" alt="${tags}" loading="lazy" />
-      </a>
-      <div class="info animal-statistic">
-        <p><b>Likes:</b> ${likes}</p>
-        <p><b>Views:</b> ${views}</p>
-        <p><b>Comments:</b> ${comments}</p>
-        <p><b>Downloads:</b> ${downloads}</p>
+      <div class="photo-card">
+        <a href="${largeImageURL}" class="image-link">
+          <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        </a>
+        <div class="info animal-statistic">
+          <p><b>Likes:</b> ${likes}</p>
+          <p><b>Views:</b> ${views}</p>
+          <p><b>Comments:</b> ${comments}</p>
+          <p><b>Downloads:</b> ${downloads}</p>
+        </div>
       </div>
-     </div>
     </div>
   `).join('');
 
@@ -38,6 +42,12 @@ function renderGallery(images) {
 
 async function fetchImages() {
   try {
+    if (isLoading || !hasMoreImages) {
+      return;
+    }
+    
+    isLoading = true;
+
     const response = await axios.get('https://pixabay.com/api/', {
       params: {
         key: apiKey,
@@ -63,31 +73,59 @@ async function fetchImages() {
         width: '320px',
         fontSize: '18px'
       });
-    
+
     } else {
+      if (isFirstSearch) {
+        Notify.success(`Hooray! We found ${data.totalHits} images.`, {
+          position: 'center-bottom',
+          timeout: 3000,
+          width: '320px',
+          fontSize: '18px'
+        });
+        isFirstSearch = false;
+      }
+
       renderGallery(data.hits);
       page++;
-      
+
+      if (page > Math.ceil(data.totalHits / perPage)) {
+        if (!endOfResultsNotified) {
+          Notify.info("You've reached the end of search results.", {
+            position: 'center-bottom',
+            timeout: 5000,
+            width: '320px',
+            fontSize: '18px'
+          });
+          endOfResultsNotified = true;
+        }
+        hasMoreImages = false;
+      }
     };
   } catch (error) {
     console.error('Error:', error);
+  } finally {
+    isLoading = false;
   }
 }
 
 function checkScroll() {
   const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
-  
+
   if (scrollTop + clientHeight >= scrollHeight - 200) {
-      fetchImages();
+    fetchImages();
   }
-  
+
 }
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
   searchTerm = searchInput.value.trim();
-  page = 1;
+
   gallery.innerHTML = '';
+  isFirstSearch = true;
+  page = 1;
+  hasMoreImages = true;
+  endOfResultsNotified = false;
   fetchImages();
 });
 
@@ -96,4 +134,4 @@ window.addEventListener('scroll', checkScroll);
 titleElement.style.cursor = "pointer";
 titleElement.addEventListener("click", () => {
   location.reload();
-})
+});
