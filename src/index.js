@@ -16,6 +16,7 @@ let isFirstSearch = true;
 let isLoading = false;
 let hasMoreImages = true;
 let endOfResultsNotified = false;
+let isFetching = false;
 
 function renderGallery(images) {
   const galleryHtml = images.map(({ webformatURL, largeImageURL, likes, views, comments, downloads, tags }) => `
@@ -42,11 +43,12 @@ function renderGallery(images) {
 
 async function fetchImages() {
   try {
-    if (isLoading || !hasMoreImages) {
+    if (isLoading || !hasMoreImages || searchTerm === '') {
       return;
     }
-    
+
     isLoading = true;
+    isFetching = true;
 
     const response = await axios.get('https://pixabay.com/api/', {
       params: {
@@ -105,28 +107,38 @@ async function fetchImages() {
     console.error('Error:', error);
   } finally {
     isLoading = false;
+    isFetching = false;
   }
 }
 
 function checkScroll() {
   const { scrollTop, clientHeight, scrollHeight } = document.documentElement;
 
-  if (scrollTop + clientHeight >= scrollHeight - 200) {
+  if (!isFetching && scrollTop + clientHeight >= scrollHeight - 200) {
     fetchImages();
   }
-
+  
 }
 
 searchForm.addEventListener('submit', (event) => {
   event.preventDefault();
   searchTerm = searchInput.value.trim();
 
-  gallery.innerHTML = '';
-  isFirstSearch = true;
-  page = 1;
-  hasMoreImages = true;
-  endOfResultsNotified = false;
-  fetchImages();
+  if (searchTerm === '') {
+    Notify.failure('Please enter a search term', {
+      position: 'center-bottom',
+      timeout: 3000,
+      width: '320px',
+      fontSize: '18px'
+    });
+  } else {
+    gallery.innerHTML = '';
+    isFirstSearch = true;
+    page = 1;
+    hasMoreImages = true;
+    endOfResultsNotified = false;
+    fetchImages();
+  }
 });
 
 window.addEventListener('scroll', checkScroll);
