@@ -1,0 +1,2 @@
+!function(){var e=document.getElementById("search-form"),t=document.getElementById("search-input");e.addEventListener("submit",(function(e){e.preventDefault(),t.value="",t.setAttribute("placeholder","Search images...")})),t.addEventListener("click",(function(){t.removeAttribute("placeholder")})),t.addEventListener("blur",(function(){""===t.value&&t.setAttribute("placeholder","Search images...")}))}();
+//# sourceMappingURL=index.2345f9b6.js.map
